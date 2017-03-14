@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>First Home Page in Flask</title>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+	</head>
+
+	<body>
+		<header>
+			<div class="container">
+				<h1 class="title">Learning Flask</h1>
+			</div>
+		</header>
+	<!-- 
+	This file is the basic layout for all the other pages for the website
+	That is the the common things liked the header and footer for all the pages
+	and the doctype tag and css and js links that we may need for all of them
+	-->
+	{% block content %}
+	{% endblock %}
+
+	</body>
+</html>
