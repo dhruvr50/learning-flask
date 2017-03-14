@@ -3,7 +3,7 @@
 #this forms the center of the server side technology at the request response cycle
 from flask import Flask, render_template, request, session, redirect, url_for
 from models import db, User
-from forms import SignupForm
+from forms import SignupForm, LoginForm
 
 app = Flask(__name__)
 #Check out Flask-sqlAlchemy #Connects to database
@@ -42,6 +42,34 @@ def signup():
 @app.route('/home')
 def home():
   return render_template('home.html')
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+  form = LoginForm()
+
+  if request.method == "POST":
+    if form.validate() == False:
+      return render_template('login.html', form=form)
+    
+    else:
+      email = form.email.data
+      password = form.password.data
+
+      user = User.query.filter_by(email=email).first()
+      if user is not None and user.check_password(password):
+        session['email'] = email
+        return redirect(url_for('home'))
+      else:
+        #Could not validate user, reload the login page
+        return redirect(url_for('login'))
+
+  elif request.method == "GET":
+    return render_template('login.html', form=form)
+
+@app.route("/logout")
+def logout():
+  session.pop('email', None)
+  return redirect(url_for('index'))
 
 if __name__ == "__main__":
 	#Run the app on a local server
