@@ -1,7 +1,7 @@
 #This is the server end of our application responsible for fetching data
 #if and when it is needed and talking to the database
 #this forms the center of the server side technology at the request response cycle
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 from models import db, User
 from forms import SignupForm
 
@@ -31,10 +31,17 @@ def signup():
       newuser = User(form.first_name.data, form.last_name.data, form.email.data, form.password.data)
       db.session.add(newuser)
       db.session.commit()
-      return 'Success!'
+
+      #Add customization and statefulness for the user
+      session['email'] = newuser.email
+      return redirect(url_for('home'))
 
   elif request.method == "GET":
     return render_template('signup.html', form=form)
+
+@app.route('/home')
+def home():
+  return render_template('home.html')
 
 if __name__ == "__main__":
 	#Run the app on a local server
